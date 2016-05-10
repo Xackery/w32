@@ -14,6 +14,7 @@ var (
 	IID_IConnectionPoint          = &GUID{0xB196B286, 0xBAB4, 0x101A, [8]byte{0xB6, 0x9C, 0x00, 0xAA, 0x00, 0x34, 0x1D, 0x07}}
 )
 
+//Don't use this to check, just check error code instead. (Lang problems)
 var (
 	ErrSuccess                = "The operation completed successfully."
 	ErrPartialReadWriteMemory = "Only part of a ReadProcessMemory or WriteProcessMemory request was completed."
