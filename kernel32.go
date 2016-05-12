@@ -210,11 +210,12 @@ func OpenProcess(desiredAccess uint32, inheritHandle bool, processId uint32) (ha
 		uintptr(desiredAccess),
 		uintptr(inherit),
 		uintptr(processId))
-	if err != nil && err.Error() == "The operation completed successfully." {
-		err = nil
+
+	if ret == 0 {
+		return 0, err
 	}
-	handle = HANDLE(ret)
-	return
+
+	return HANDLE(ret), nil
 }
 
 func TerminateProcess(hProcess HANDLE, uExitCode uint) bool {
@@ -332,14 +333,16 @@ func SetSystemTime(time *SYSTEMTIME) (err error) {
 func WriteProcessMemory(hProcess HANDLE, lpBaseAddress uint32, data []byte, size uint) (err error) {
 	var numBytesRead uintptr
 
-	_, _, err = procWriteProcessMemory.Call(uintptr(hProcess),
+	ret, _, err := procWriteProcessMemory.Call(uintptr(hProcess),
 		uintptr(lpBaseAddress),
 		uintptr(unsafe.Pointer(&data[0])),
 		uintptr(size),
 		uintptr(unsafe.Pointer(&numBytesRead)))
-	if err.Error() != ErrSuccess {
+
+	if ret == 0 {
 		return
 	}
+
 	err = nil
 	return
 }
@@ -362,14 +365,17 @@ func ReadProcessMemory(hProcess HANDLE, lpBaseAddress uint32, size uint) (data [
 	var numBytesRead uintptr
 	data = make([]byte, size)
 
-	_, _, err = procReadProcessMemory.Call(uintptr(hProcess),
+	ret, _, err := procReadProcessMemory.Call(uintptr(hProcess),
 		uintptr(lpBaseAddress),
 		uintptr(unsafe.Pointer(&data[0])),
 		uintptr(size),
 		uintptr(unsafe.Pointer(&numBytesRead)))
-	if err.Error() != ErrSuccess {
+
+	//Better error check with no lang problems (See Return value).
+	if ret == 0 {
 		return
 	}
+
 	err = nil
 	return
 }
@@ -377,9 +383,11 @@ func ReadProcessMemory(hProcess HANDLE, lpBaseAddress uint32, size uint) (data [
 //Read process memory and convert the returned data to uint32
 func ReadProcessMemoryAsUint32(hProcess HANDLE, lpBaseAddress uint32) (buffer uint32, err error) {
 	data, err := ReadProcessMemory(hProcess, lpBaseAddress, 4)
+
 	if err != nil {
 		return
 	}
+
 	buffer = binary.LittleEndian.Uint32(data)
 	return
 }
@@ -395,3 +403,34 @@ func SetConsoleCtrlHandler(handlerRoutine func(DWORD) int32, add uint) (err erro
 	err = nil
 	return
 }
+
+func GetCurrentProcess() (pseudoHandle HANDLE, err error) {
+	_handle, err := syscall.GetCurrentProcess()
+	pseudoHandle = HANDLE(_handle)
+
+	return
+}
+
+func Process32First(snapshot HANDLE, procEntry *PROCESSENTRY32)(err error) {
+	_snapshot := syscall.Handle(snapshot)
+	//var _procEntry *syscall.ProcessEntry32
+
+	err = syscall.Process32First(_snapshot, (*syscall.ProcessEntry32)(procEntry))
+
+	//procEntry = PROCESSENTRY32(*_procEntry)
+
+	return
+}
+
+func Process32Next(snapshot HANDLE, procEntry *PROCESSENTRY32)(err error) {
+	_snapshot := syscall.Handle(snapshot)
+	//var _procEntry *syscall.ProcessEntry32
+
+	err = syscall.Process32Next(_snapshot, (*syscall.ProcessEntry32)(procEntry))
+
+	//procEntry = PROCESSENTRY32(*_procEntry)
+
+	return
+}
+
+

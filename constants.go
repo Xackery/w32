@@ -2295,6 +2295,10 @@ const (
 
 const (
 	STANDARD_RIGHTS_REQUIRED = 0x000F
+	STANDARD_RIGHTS_READ     = 0x20000
+	STANDARD_RIGHTS_WRITE    = 0x20000
+	STANDARD_RIGHTS_EXECUTE  = 0x20000
+	STANDARD_RIGHTS_ALL      = 0x1F0000
 )
 
 // Service Control Manager object specific access types
@@ -2715,3 +2719,81 @@ const (
 	CTRL_LOGOFF_EVENT   = 0x0005
 	CTRL_SHUTDOWN_EVENT = 0x0006
 )
+
+// Winnt.h
+const (
+	ANYSIZE_ARRAY	= 1
+)
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630(v=vs.85).aspx
+const (
+	SE_PRIVILEGE_ENABLED_BY_DEFAULT	= 0X00000001
+	SE_PRIVILEGE_ENABLED 		= 0X00000002
+	SE_PRIVILEGE_REMOVED 		= 0X00000004
+	SE_PRIVILEGE_USED_FOR_ACCESS 	= 0X80000000
+	SE_PRIVILEGE_VALID_ATTRIBUTES 	= SE_PRIVILEGE_ENABLED_BY_DEFAULT | SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_REMOVED | SE_PRIVILEGE_USED_FOR_ACCESS
+)
+
+// Privilege Names
+const (
+	SE_CREATE_TOKEN_NAME           = "SeCreateTokenPrivilege"
+	SE_ASSIGNPRIMARYTOKEN_NAME     = "SeAssignPrimaryTokenPrivilege"
+	SE_LOCK_MEMORY_NAME            = "SeLockMemoryPrivilege"
+	SE_INCREASE_QUOTA_NAME         = "SeIncreaseQuotaPrivilege"
+	SE_UNSOLICITED_INPUT_NAME      = "SeUnsolicitedInputPrivilege"
+	SE_MACHINE_ACCOUNT_NAME        = "SeMachineAccountPrivilege"
+	SE_TCB_NAME                    = "SeTcbPrivilege"
+	SE_SECURITY_NAME               = "SeSecurityPrivilege"
+	SE_TAKE_OWNERSHIP_NAME         = "SeTakeOwnershipPrivilege"
+	SE_LOAD_DRIVER_NAME            = "SeLoadDriverPrivilege"
+	SE_SYSTEM_PROFILE_NAME         = "SeSystemProfilePrivilege"
+	SE_SYSTEMTIME_NAME             = "SeSystemtimePrivilege"
+	SE_PROF_SINGLE_PROCESS_NAME    = "SeProfileSingleProcessPrivilege"
+	SE_INC_BASE_PRIORITY_NAME      = "SeIncreaseBasePriorityPrivilege"
+	SE_CREATE_PAGEFILE_NAME        = "SeCreatePagefilePrivilege"
+	SE_CREATE_PERMANENT_NAME       = "SeCreatePermanentPrivilege"
+	SE_BACKUP_NAME                 = "SeBackupPrivilege"
+	SE_RESTORE_NAME                = "SeRestorePrivilege"
+	SE_SHUTDOWN_NAME               = "SeShutdownPrivilege"
+	SE_DEBUG_NAME                  = "SeDebugPrivilege"
+	SE_AUDIT_NAME                  = "SeAuditPrivilege"
+	SE_SYSTEM_ENVIRONMENT_NAME     = "SeSystemEnvironmentPrivilege"
+	SE_CHANGE_NOTIFY_NAME          = "SeChangeNotifyPrivilege"
+	SE_REMOTE_SHUTDOWN_NAME        = "SeRemoteShutdownPrivilege"
+	SE_UNDOCK_NAME                 = "SeUndockPrivilege"
+	SE_ENABLE_DELEGATION_NAME      = "SeEnableDelegationPrivilege"
+	SE_MANAGE_VOLUME_NAME          = "SeManageVolumePrivilege"
+	SE_IMPERSONATE_NAME            = "SeImpersonatePrivilege"
+	SE_CREATE_GLOBAL_NAME          = "SeCreateGlobalPrivilege"
+)
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa374905(v=vs.85).aspx
+const (
+	// do not reorder
+	TOKEN_ASSIGN_PRIMARY = 1 << iota
+	TOKEN_DUPLICATE
+	TOKEN_IMPERSONATE
+	TOKEN_QUERY
+	TOKEN_QUERY_SOURCE
+	TOKEN_ADJUST_PRIVILEGES
+	TOKEN_ADJUST_GROUPS
+	TOKEN_ADJUST_DEFAULT
+
+	TOKEN_ALL_ACCESS = STANDARD_RIGHTS_REQUIRED |
+		TOKEN_ASSIGN_PRIMARY |
+		TOKEN_DUPLICATE |
+		TOKEN_IMPERSONATE |
+		TOKEN_QUERY |
+		TOKEN_QUERY_SOURCE |
+		TOKEN_ADJUST_PRIVILEGES |
+		TOKEN_ADJUST_GROUPS |
+		TOKEN_ADJUST_DEFAULT
+	TOKEN_READ  = STANDARD_RIGHTS_READ | TOKEN_QUERY
+	TOKEN_WRITE = STANDARD_RIGHTS_WRITE |
+		TOKEN_ADJUST_PRIVILEGES |
+		TOKEN_ADJUST_GROUPS |
+		TOKEN_ADJUST_DEFAULT
+	TOKEN_EXECUTE = STANDARD_RIGHTS_EXECUTE
+)
+
+

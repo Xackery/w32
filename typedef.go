@@ -209,6 +209,7 @@ type (
 	HRSRC           HANDLE
 	HTHUMBNAIL      HANDLE
 	HWND            HANDLE
+	LONG		int32
 	LPARAM          uintptr
 	LPCVOID         unsafe.Pointer
 	LRESULT         uintptr
@@ -913,6 +914,38 @@ type KBDLLHOOKSTRUCT struct {
 	Flags       DWORD
 	Time        DWORD
 	DwExtraInfo ULONG_PTR
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa379261(v=vs.85).aspx
+type LUID struct {
+	LowPart		DWORD
+	HighPart	LONG
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa379263(v=vs.85).aspx
+type LUID_AND_ATTRIBUTES struct{
+	Luid		LUID
+	Attributes	DWORD
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa379630(v=vs.85).aspx
+type TOKEN_PRIVILEGES struct {
+	PrivilegeCount	DWORD
+	Privileges	[ANYSIZE_ARRAY]LUID_AND_ATTRIBUTES
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/ms684839(v=vs.85).aspx
+type PROCESSENTRY32 struct {
+	Size            uint32
+	Usage           uint32
+	ProcessID       uint32
+	DefaultHeapID   uintptr
+	ModuleID        uint32
+	Threads         uint32
+	ParentProcessID uint32
+	PriClassBase    int32
+	Flags           uint32
+	ExeFile         [MAX_PATH]uint16
 }
 
 type HOOKPROC func(int, WPARAM, LPARAM) LRESULT

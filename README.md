@@ -29,7 +29,7 @@ Example
 package main
 
 import (
-	"github.com/xackery/w32"
+	"github.com/Xustyx/w32"
 )
 
 func main() {
@@ -43,8 +43,9 @@ Setup
 =====
 
 1. [Install Go](https://golang.org/dl/). I recommend 32bit aka i386 due to GCC 64bit issues on windows.
-2. Get a GCC compiler. I recommend the [WinBuilds version](http://win-builds.org/doku.php/download_and_installation_from_windows).
-3. In command line, type `go get github.com/xackery/w32`
+2. ~~Get a GCC compiler. I recommend the [WinBuilds version](http://win-builds.org/doku.php/download_and_installation_from_windows).~~
+(I removed 2 functions that require it until not needed)
+3. In command line, type `go get github.com/Xustyx/w32`
 4. Create a new file, and try the example above.
 
 Contribute

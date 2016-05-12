@@ -7,13 +7,9 @@ package w32
 import (
 	// #include <wtypes.h>
 	// #include <winable.h>
-	"C"
-	"encoding/binary"
-	"errors"
+	//"C"
 	"fmt"
-	//"regexp"
 	"syscall"
-	"unicode/utf8"
 	"unsafe"
 )
 
@@ -938,9 +934,10 @@ func ChangeDisplaySettingsEx(szDeviceName *uint16, devMode *DEVMODE, hwnd HWND, 
 	return int32(ret)
 }
 
+//I don't want use GCC...
 //Synthesizes keystrokes, mouse motions, and button clicks.
 //see https://msdn.microsoft.com/en-us/library/windows/desktop/ms646310(v=vs.85).aspx
-func SendInput(inputs []INPUT) (err error) {
+/*func SendInput(inputs []INPUT) (err error) {
 	var validInputs []C.INPUT
 
 	for _, oneInput := range inputs {
@@ -971,18 +968,18 @@ func SendInput(inputs []INPUT) (err error) {
 	}
 	err = nil
 	return
-}
+}*/
 
 //Simplifies SendInput for Keyboard related keys. Supports alphanumeric
-func SendInputString(input string) (err error) {
+/*func SendInputString(input string) (err error) {
 	var inputs []INPUT
 	b := make([]byte, 3)
 
-	/*reg, err := regexp.Compile("^[a-zA-Z0-9]+")
-	if err != nil {
-		return
-	}
-	input = reg.ReplaceAllString(input, "")*/
+	//reg, err := regexp.Compile("^[a-zA-Z0-9]+")
+	//if err != nil {
+	//	return
+	//}
+	//input = reg.ReplaceAllString(input, "")
 
 	for _, rune := range input {
 
@@ -1002,7 +999,7 @@ func SendInputString(input string) (err error) {
 	}
 	err = SendInput(inputs)
 	return
-}
+}*/
 
 func SetWindowsHookEx(idHook int, lpfn HOOKPROC, hMod HINSTANCE, dwThreadId DWORD) HHOOK {
 	ret, _, _ := procSetWindowsHookEx.Call(

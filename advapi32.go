@@ -32,6 +32,10 @@ var (
 	procOpenService        = modadvapi32.NewProc("OpenServiceW")
 	procStartService       = modadvapi32.NewProc("StartServiceW")
 	procControlService     = modadvapi32.NewProc("ControlService")
+
+	procOpenProcessToken		= modadvapi32.NewProc("OpenProcessToken")
+	procLookupPrivilegeValue	= modadvapi32.NewProc("LookupPrivilegeValueW")
+	procAdjustTokenPrivileges	= modadvapi32.NewProc("AdjustTokenPrivileges")
 )
 
 func RegCreateKey(hKey HKEY, subKey string) HKEY {
@@ -380,3 +384,37 @@ func ControlService(hService HANDLE, dwControl uint32, lpServiceStatus *SERVICE_
 
 	return ret != 0
 }
+
+func OpenProcessToken(processHandle HANDLE, desiredAccess uint32, tokenHandle *HANDLE) bool {
+
+	ret, _, _ := procOpenProcessToken.Call(
+		uintptr(processHandle),
+		uintptr(desiredAccess),
+		uintptr(unsafe.Pointer(tokenHandle)))
+
+	return ret != 0
+}
+
+func LookupPrivilegeValue( lpSystemName string, lpName string, lpLuid *LUID) bool {
+
+	ret, _, _ := procLookupPrivilegeValue.Call(
+		uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(lpSystemName))),
+		uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(lpName))),
+		uintptr(unsafe.Pointer(lpLuid)))
+
+	return ret != 0
+}
+
+func AdjustTokenPrivileges(tokenHandle HANDLE, disableAllPrivileges BOOL, newState *TOKEN_PRIVILEGES, bufferLength uint32, previousState *TOKEN_PRIVILEGES, returnLength *uint32) bool {
+
+	ret, _, _  := procAdjustTokenPrivileges.Call(
+		uintptr(tokenHandle),
+		uintptr(disableAllPrivileges),
+		uintptr(unsafe.Pointer(newState)),
+		uintptr(bufferLength),
+		uintptr(unsafe.Pointer(previousState)),
+		uintptr(unsafe.Pointer(returnLength)))
+
+	return ret != 0
+}
+
